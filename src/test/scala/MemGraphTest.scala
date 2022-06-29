@@ -1,3 +1,4 @@
+import org.apache.log4j.Logger
 import org.junit.Test
 
 import java.io.File
@@ -16,17 +17,17 @@ import scala.io.Source
 @Test
 class MemGraphTest {
   val memGraph = new MemGraph()
+  val logger = Logger.getLogger(this.getClass)
 
   @Test
   def createTest(): Unit ={
-    /*替换成resouces下的queries目录*/
-    val path = "/Users/along/github/MemGraph/src/test/resources/queries"
-    val queriesDir = new File(path)
-    val file = queriesDir.listFiles()
+    val queryFilesPath = System.getProperty("user.dir")+"/src/test/resources/queries"
+    val queriesDir = new File(queryFilesPath)
+    val files = queriesDir.listFiles()
 
     var cyphers:List[String] = List()
 
-    file.foreach(e=>{
+    files.foreach(e=>{
       val source = Source.fromFile(e)
       val lines = source.mkString
       try{
@@ -38,8 +39,8 @@ class MemGraphTest {
       }
     })
 
-    println("不支持的cypher文件：")
+    logger.info("not support cyphers:")
     cyphers = cyphers.sorted
-    cyphers.foreach(println)
+    cyphers.foreach(e=>logger.info(e))
   }
 }
